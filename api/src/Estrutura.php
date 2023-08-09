@@ -1,11 +1,14 @@
 <?php 
 
+
 // Definindo os tipos come restritos
 declare(strict_types = 1);
 
 namespace Api\Websocket;
 use Exception;
 use Api\Websocket\Conexao\Conn;
+
+require '../vendor/autoload.php';
 
 class Estrutura {
 
@@ -18,6 +21,7 @@ class Estrutura {
             $this->dados[$chave] = $value;
         }
         // Verificando se todos os valores enviados estão prenchidos
+        
         foreach($this->dados as $chave => $value){
             if(is_null($value) || empty($value)){
                 throw new Exception("Faltou vc prencher os dados associados a/ao {$chave}");
@@ -166,9 +170,10 @@ class Estrutura {
     // Faltou arrumar esse Read --------------------------------------X (Tenho que ver o tipo de DataTables que utilizaremos)
     protected function Read(){
         $requestData = $_REQUEST;
+        //print_r($requestData);
         $colunas = $requestData['columns']; //Obter as colunas vindas do resquest
         //Preparar o comando sql para obter os dados da categoria
-        $sql = "SELECT * FROM equipamentos WHERE 1=1 ";
+        $sql = "SELECT * FROM equipamento WHERE 1=1 ";
         //Obter o total de registros cadastrados
         $resultado = $this->conn->Conn()->query($sql);
         $qtdeLinhas = $resultado->rowCount();
@@ -231,7 +236,7 @@ class Estrutura {
                         'mensagem' => 'Erro ao abrir o registro:'
                     );  
             }
-        echo json_encode($dados);
+        return json_encode($dados);
     
     
     }
@@ -312,9 +317,9 @@ class Estrutura {
         $this->SetDados($dados);
         echo $this->Insert();
     }
-    public function CallRead(Array $dados){
-        $this->SetDados($dados);
-        echo $this->Read();
+    public function CallRead(){
+        // Datatables
+        $this->Read();
     }
 
     // Chadamas de Funções de Set valores (Estou usando isso por causa da forma de envio de dados do Chat)
@@ -335,10 +340,10 @@ class Estrutura {
 $requestData = $_REQUEST;
 print_r($requestData);
 try {
-    $teste = new Estrutura();
+    
     if($requestData['operacao'] == 'read') {
-
-
+        $teste = new Estrutura();
+        echo $teste->CallRead();
     };
     if($requestData['operacao'] == 'create') {
     

@@ -43,15 +43,19 @@ $(document).ready(function(){
             [0, "desc"]
         ],
         "columns": [{
-                "data": 'ID',
-                "className": 'text-center'
-            },
-            {
-                "data": 'NOME',
+                "data": 'nome',
                 "className": 'text-left'
             },
             {
-                "data": 'ID',
+                "data": 'status',
+                "className": 'text-left'
+            },
+            {
+                "data": 'id',
+                "className": 'text-center'
+            },
+            {
+                "data": 'id',
                 "orderable": false,
                 "searchable": false,
                 "className": 'text-center',

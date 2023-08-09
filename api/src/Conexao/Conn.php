@@ -11,7 +11,7 @@ use PDOException;
 
         // configurações da conexão do banco 
         private $dbname = "tcc";
-        private $hostname = "localhost";
+        private $hostname = "localhost: 3306";
         private $username =  "root";
         private $pwd = "";
 
