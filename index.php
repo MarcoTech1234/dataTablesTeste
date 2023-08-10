@@ -66,14 +66,14 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="table-cliente" class="table table-hover">
-                            <thead>
+                        <thead>
                             <tr>
                                 <th class="text-center">Nome</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">ID</th>
                                 <th class="text-center">Ações</th>
                             </tr>
-                            </thead>
+                        </thead>
                     </table>
                 </div>
             </div>
@@ -105,6 +105,8 @@
                 <div class="form-group">
                     <label>Nome</label>
                     <input id="NOME" class="form-control" type="text" name="NOME">
+                    <label>Status</label>
+                    <input id="STATUS" class="form-control" type="text" name="NOME">
                 </div>
                 <input type="hidden" name="ID" id="ID">
                 </form>  

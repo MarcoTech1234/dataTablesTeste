@@ -21,13 +21,13 @@ class Estrutura {
             $this->dados[$chave] = $value;
         }
         // Verificando se todos os valores enviados estão prenchidos
-        
+        /*
         foreach($this->dados as $chave => $value){
             if(is_null($value) || empty($value)){
                 throw new Exception("Faltou vc prencher os dados associados a/ao {$chave}");
                 
             } 
-        }
+        }*/
         $this->conn = new Conn();
     }
 
@@ -170,7 +170,7 @@ class Estrutura {
     // Faltou arrumar esse Read --------------------------------------X (Tenho que ver o tipo de DataTables que utilizaremos)
     protected function Read(){
         $requestData = $_REQUEST;
-        //print_r($requestData);
+        //$requestData = filter_var_array($requestData, FILTER_SANITIZE_STRING);
         $colunas = $requestData['columns']; //Obter as colunas vindas do resquest
         //Preparar o comando sql para obter os dados da categoria
         $sql = "SELECT * FROM equipamento WHERE 1=1 ";
@@ -179,7 +179,7 @@ class Estrutura {
         $qtdeLinhas = $resultado->rowCount();
         //Verificando se há filtro determinado
         $filtro = $requestData['search']['value'];
-        if( !empty( $filtro ) ){
+        if(!empty($filtro)){
             //Montar a expressão lógica que irá compor os filtros
             //Aqui você deverá determinar quais colunas farão parte do filtro
             $sql .= " AND (ID LIKE '$filtro%' ";
@@ -343,7 +343,7 @@ try {
     
     if($requestData['operacao'] == 'read') {
         $teste = new Estrutura();
-        echo $teste->CallRead();
+        $teste->CallRead();
     };
     if($requestData['operacao'] == 'create') {
     
