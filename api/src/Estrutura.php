@@ -168,12 +168,12 @@ class Estrutura {
     }
 
     // Faltou arrumar esse Read --------------------------------------X (Tenho que ver o tipo de DataTables que utilizaremos)
-    protected function Read(){
+    public function Read() : void{
         $requestData = $_REQUEST;
         //$requestData = filter_var_array($requestData, FILTER_SANITIZE_STRING);
         $colunas = $requestData['columns']; //Obter as colunas vindas do resquest
         //Preparar o comando sql para obter os dados da categoria
-        $sql = "SELECT * FROM equipamento WHERE 1=1 ";
+        $sql = "SELECT * FROM equipamento WHERE 1=1";
         //Obter o total de registros cadastrados
         $resultado = $this->conn->Conn()->query($sql);
         $qtdeLinhas = $resultado->rowCount();
@@ -182,8 +182,8 @@ class Estrutura {
         if(!empty($filtro)){
             //Montar a expressão lógica que irá compor os filtros
             //Aqui você deverá determinar quais colunas farão parte do filtro
-            $sql .= " AND (ID LIKE '$filtro%' ";
-            $sql .= " OR NOME LIKE '$filtro%') ";
+            $sql .= " AND (id LIKE '$filtro%' ";
+            $sql .= " OR nome LIKE '$filtro%') ";
         }
         //Obter o total dos dados filtrados
         $resultado = $this->conn->Conn()->query($sql);
@@ -198,6 +198,7 @@ class Estrutura {
         //Realizar o ORDER BY com LIMIT
         $sql .= " ORDER BY $ordem $direcao LIMIT $inicio, $tamanho ";
         $resultado = $this->conn->Conn()->query($sql);
+        //echo $sql;
         $resultData = array();
         while($row = $resultado->fetch()){
             $resultData[] = array_map('utf8_encode', $row);
@@ -338,12 +339,12 @@ class Estrutura {
 }
 
 $requestData = $_REQUEST;
-print_r($requestData);
+
 try {
     
     if($requestData['operacao'] == 'read') {
         $teste = new Estrutura();
-        $teste->CallRead();
+        $teste->Read();
     };
     if($requestData['operacao'] == 'create') {
     
