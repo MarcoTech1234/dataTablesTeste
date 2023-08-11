@@ -11,14 +11,15 @@ function CRUD(dados, url){
 
             Swal.fire ({
                 icon: dados.type,
-                title: 'SysPed',
+                title: 'SGTEL',
                 text: dados.mensagem
             })
             $('#modal-cliente').modal('hide')
         }
             else if(dados.type == 'view'){
-            $('#NOME').val(dados.dados.NOME)
-            $('#ID').val(dados.dados.ID)
+            $('#nome').val(dados.dados.nome)
+            $('#status').val(dados.dados.status)
+            $('#id').val(dados.dados.id)
         }
         }
     })
@@ -86,10 +87,11 @@ $('.btn-save').click(function(e){
     e.preventDefault()
 
     let dados = $('#form-cliente').serialize()
+    dados += `&tabela= equipamento`
     dados += `&operacao=${$('.btn-save').attr('data-operation')}` 
     
     let url = 'api/src/Estrutura.php'
-    
+    console.log(dados);
     CRUD(dados, url)
 
     $('#table-cliente').DataTable().ajax.reload()

@@ -104,11 +104,11 @@
                 <form id="form-cliente" action="" method="post">
                 <div class="form-group">
                     <label>Nome</label>
-                    <input id="NOME" class="form-control" type="text" name="NOME">
+                    <input id="nome" class="form-control" type="text" name="nome">
                     <label>Status</label>
-                    <input id="STATUS" class="form-control" type="text" name="NOME">
+                    <input id="status" class="form-control" type="text" name="status">
                 </div>
-                <input type="hidden" name="ID" id="ID">
+                <input type="hidden" name="id" id="id">
                 </form>  
             </div>
             <div class="modal-footer">

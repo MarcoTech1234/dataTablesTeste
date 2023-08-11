@@ -24,23 +24,30 @@ class Estrutura {
         /*
         foreach($this->dados as $chave => $value){
             if(is_null($value) || empty($value)){
+                $dados = array(
+                    "type" => 'error',
+                    "mensagem" => 'O campo $chave é obrigatório(s), e não preenchido(s).'
+                );
                 throw new Exception("Faltou vc prencher os dados associados a/ao {$chave}");
-                
             } 
-        }*/
+        }
+        echo json_encode($dados)*/
         $this->conn = new Conn();
     }
 
     // Sempre vai ter pelo menos um valor cadastrado no banco (para  podermoss fazer a comparação dos dados)
     protected function Insert() {
-        //var_dump($this->dados);
         //print_r($this->conn->Conn());
         $tabela = $this->dados["tabela"];
         $this->tabela = $tabela;
         $sql = "SELECT * FROM {$tabela}";
         if(!$stmt = $this->conn->Conn()->query($sql)) {
+            $dados = array(
+                "type" => 'error',
+                "mensagem" => 'Erro ao conectar a(ao) banco'
+            );
+            echo json_encode($dados);
             throw new Exception("Erro ao buscar tabela  \n", 404);
-            
         } else {
             //print_r($stmt->fetch());
             $colunsbanco = array_keys($stmt->fetch());
@@ -62,15 +69,24 @@ class Estrutura {
             $valores = "'".implode("','" ,array_values($this->dados))."'";
             //print_r(array_diff($colunsbanco, $colunsComp));
             if($array = array_diff($colunsbanco, $colunsComp)){
-                var_dump($array);
+                //var_dump($array);
                 $erro = implode("," , $array);
                 // Erro se a pessoa tentar enviar dados não compativeis com a tabela acessada
+                $dados = array(
+                    "type" => 'error',
+                    "mensagem" => 'Dado enviado não consta na tabela de envio'
+                );
+                echo json_encode($dados);
                 throw new Exception("Parece que a coluna {$erro} não foi prenchida ou não consta no nosso banco de dados \n", 31);
             } else {
                 // Verificando se é a tabela com chaves primarias e vendo se o valor e igual ao do banco
                 if($this->Chave_Estrangeira() == false){
+                    $dados = array(
+                        "type" => 'error',
+                        "mensagem" => 'Chave Estrangeira não existe'
+                    );
+                    echo json_encode($dados);
                     throw new Exception("Erro, Chave primaria Falha \n", 128);
-                    
                 }
                 for($i = 1; $i <= count(array_keys($this->dados)); $i++){
                     $count[] = "?" ;
@@ -79,17 +95,27 @@ class Estrutura {
                 $sql = "INSERT INTO {$tabela} ({$colunas}) VALUES ($atributos)";
                 $stmt = $this->conn->Conn()->prepare($sql);
                 if($stmt->execute(array_values($this->dados))){
-                    echo "funcionou \n";
-                    echo $sql;
+                    //echo "funcionou \n";
+                    //echo $sql;
+                    $dados = array(
+                        'type' => 'success',
+                        'mensagem' => 'Registro salvo com sucesso!'
+                    );
                 } else {
+                    $dados = array(
+                        "type" => 'error',
+                        "mensagem" => 'Erro ao conectar a(ao) banco'
+                    );
+                    echo json_encode($dados);
                     throw new Exception("Erro ao executar inserção ao banco", 41);
-                    
                 }
                 //$this->conn->Close();
-                echo json_encode($colunas)."\n\n";
-                echo json_encode($valores)."\n\n";
+                //echo json_encode($colunas)."\n\n";
+                //echo json_encode($valores)."\n\n";
+                echo json_encode($dados);
             }
         }
+        
     }
 
     protected function Update(){
@@ -168,7 +194,7 @@ class Estrutura {
     }
 
     // Faltou arrumar esse Read --------------------------------------X (Tenho que ver o tipo de DataTables que utilizaremos)
-    public function Read() : void{
+    protected function Read() : void{
         $requestData = $_REQUEST;
         //$requestData = filter_var_array($requestData, FILTER_SANITIZE_STRING);
         $colunas = $requestData['columns']; //Obter as colunas vindas do resquest
@@ -216,7 +242,7 @@ class Estrutura {
     public function View() {
         $requestData = $_REQUEST;
             // gerar a querie de insersao no banco de dados 
-            $sql = "SELECT * FROM CLIENTE WHERE ID = ".$requestData['ID']."";
+            $sql = "SELECT * FROM equipamento WHERE ID = ".$requestData['ID']."";
             // preparar a querie para gerar objetos de insersao no banco de dados
             
             $resultado = $this->conn->Conn()->query($sql);
@@ -308,6 +334,13 @@ class Estrutura {
         //$this->conn->Close();
     }
 
+    public function Remove(Array $dados, $valor) {
+        $indice = array_search($valor, $dados);
+        //echo $indice;
+        $array = array_diff($dados, [$valor]);
+        return $array;
+    }
+
     // Chamadas de Funções
 
     public function CallUpdate(Array $dados){
@@ -320,7 +353,11 @@ class Estrutura {
     }
     public function CallRead(){
         // Datatables
-        $this->Read();
+        echo $this->Read();
+    }
+    public function CallView(){
+        // Datatables
+        echo $this->View();
     }
 
     // Chadamas de Funções de Set valores (Estou usando isso por causa da forma de envio de dados do Chat)
@@ -328,39 +365,42 @@ class Estrutura {
     public function SetDados(Array $dados){
         // Verificando se todos os valores enviados estão prenchidos
         //print_r($teste);
+        //var_dump($dados);
         foreach($dados as $chave => $value){
             if(is_null($value) || empty($value)){
                 throw new Exception("Faltou vc prencher os dados associados a/ao {$chave} \n\n");
                 
             } 
         }
+        
         $this->dados = $dados;
     }
 }
 
 $requestData = $_REQUEST;
-
+// Operando com o datatables (Fase Teste)
 try {
-    
+    $teste = new Estrutura();
     if($requestData['operacao'] == 'read') {
-        $teste = new Estrutura();
-        $teste->Read();
+        $teste->CallRead();
     };
     if($requestData['operacao'] == 'create') {
-    
-    
+        $dados = $requestData;
+        $dados = $teste->Remove($dados, $requestData['operacao']);
+        $dados = $teste->Remove($dados, $requestData['id']);
+        echo $teste->CallInsert($dados);
+        
     };
     if($requestData['operacao'] == 'update') {
-    
-    
+        //print_r($requestData);
+        $teste->CallUpdate($requestData);
     };
     if($requestData['operacao'] == 'delete') {
     
     
     };
     if($requestData['operacao'] == 'view') {
-    
-    
+        $teste->CallView();
     };
 
 } catch (Exception $e) {
