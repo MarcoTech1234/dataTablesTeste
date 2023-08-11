@@ -1,8 +1,7 @@
 {
     "autoload": {
         "psr-4": {
-            "Api\\Websocket\\": "src/",
-            "Conexao\\": "Conexao/"
+            "Api\\Websocket\\": "src/"
         }
     },
     "require": {

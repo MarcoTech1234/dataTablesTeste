@@ -1,5 +1,5 @@
 <?php
-
+    
     session_start(); // Iniciar a sessão 
 
     ob_start(); // Limpar o buffer de saida para evitar erro de redirecionamento

@@ -8,7 +8,15 @@ namespace Api\Websocket;
 use Exception;
 use Api\Websocket\Conexao\Conn;
 
-require '../vendor/autoload.php';
+$url = 'vendor/autoload.php';
+// VErificador de URL simples
+if (file_exists($url)) {
+    // Verificando se estou usando o caminho Web socket para ser chamado no servidor
+    // ou se um objeto js esta enviando seus dados para esse Crud
+} else {
+    $url = '../vendor/autoload.php';
+}
+require $url;
 
 class Estrutura {
 
