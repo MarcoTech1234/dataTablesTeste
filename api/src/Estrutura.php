@@ -44,7 +44,7 @@ class Estrutura {
         if(!$stmt = $this->conn->Conn()->query($sql)) {
             $dados = array(
                 "type" => 'error',
-                "mensagem" => 'Erro ao conectar a(ao) banco'
+                "mensagem" => 'Erro na conexao do banco ou acesso a tabela'
             );
             echo json_encode($dados);
             throw new Exception("Erro ao buscar tabela  \n", 404);
@@ -74,7 +74,7 @@ class Estrutura {
                 // Erro se a pessoa tentar enviar dados não compativeis com a tabela acessada
                 $dados = array(
                     "type" => 'error',
-                    "mensagem" => 'Dado enviado não consta na tabela de envio'
+                    "mensagem" => "Dado {$erro} não consta na tabela de envio"
                 );
                 echo json_encode($dados);
                 throw new Exception("Parece que a coluna {$erro} não foi prenchida ou não consta no nosso banco de dados \n", 31);
@@ -127,8 +127,12 @@ class Estrutura {
         $sql = "SELECT * FROM {$tabela} {$id}";
         //echo $sql;
         if(!$stmt = $this->conn->Conn()->query($sql)) {
+            $dados = array(
+                "type" => 'error',
+                "mensagem" => 'Erro na conexao do banco ou acesso a tabela'
+            );
+            echo json_encode($dados);
             throw new Exception("Erro ao buscar tabela \n", 99);
-            
         } else {
             // Pegando as colunas do banco para verificar se todos os dados foram entregues
             $dadosbanco = $stmt->fetch();
@@ -152,13 +156,21 @@ class Estrutura {
             if($array = array_diff($colunsbanco, $colunsComp)){
                 var_dump($array);
                 $erro = implode("," , $array);
+                $dados = array(
+                    "type" => 'error',
+                    "mensagem" => "Dado {$erro} não consta na tabela de envio"
+                );
                 // Erro se a pessoa tentar enviar dados não compativeis com a tabela acessada
                 throw new Exception("Parece que a coluna {$erro} não foi prenchida ou não consta no nosso banco de dados \n", 123);
             } else {
                 // Verificando se é a tabela com chaves primarias e vendo se o valor e igual ao do banco
                 if($this->Chave_Estrangeira() == false){
+                    $dados = array(
+                        "type" => 'error',
+                        "mensagem" => 'Chave Estrangeira não existe'
+                    );
+                    echo json_encode($dados);
                     throw new Exception("Erro, Chave primaria Falha \n", 128);
-                    
                 }
                 $colunas = array_keys($this->dados);
                 foreach($colunas as $chave => $value){
@@ -181,14 +193,23 @@ class Estrutura {
                 //echo $sql;
                 //print_r(array_values($this->dados));
                 if($stmt->execute(array_values($this->dados))){
-                    echo "\n funcionou \n";
+                    //echo "\n funcionou \n";
+                    $dados = array(
+                        'type' => 'success',
+                        'mensagem' => 'Registro salvo com sucesso!'
+                    );
                 } else {
+                    $dados = array(
+                        "type" => 'error',
+                        "mensagem" => 'Erro ao conectar a(ao) banco'
+                    );
+                    echo json_encode($dados);
                     throw new Exception("Erro ao executar inserção ao banco \n", 41);
-                    
                 }
                 //$this->conn->Close();
-                echo json_encode($colunas)."\n\n";
-                echo json_encode($valores)."\n\n";
+                //echo json_encode($colunas)."\n\n";
+                //echo json_encode($valores)."\n\n";
+                echo json_encode($dados);
             }
         }
     }
@@ -392,7 +413,6 @@ try {
         
     };
     if($requestData['operacao'] == 'update') {
-        //print_r($requestData);
         $teste->CallUpdate($requestData);
     };
     if($requestData['operacao'] == 'delete') {
