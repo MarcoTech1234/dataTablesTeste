@@ -80,6 +80,7 @@ $('.btn-new').click(function(e){
     $('.modal-title').append('Cadastro de Cliente')
     $('#form-cliente :input').val('')
     $('.btn-save').attr('data-operation', 'create')
+    $('.btn-save').show()
     $('#modal-cliente').modal('show')
     $('input').prop('disabled', false)
 })

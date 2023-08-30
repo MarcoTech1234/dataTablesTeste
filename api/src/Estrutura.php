@@ -421,6 +421,8 @@ try {
         
     };
     if($requestData['operacao'] == 'update') {
+        $dados = $requestData;
+        $dados = $teste->Remove($dados, $requestData['operacao']);
         $teste->CallUpdate($requestData);
     };
     if($requestData['operacao'] == 'delete') {
