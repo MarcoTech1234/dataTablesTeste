@@ -4,13 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed
+class ComposerStaticInit70fd346c1df44bbb471697a01a42b813
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
     );
@@ -43,9 +43,9 @@ class ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed
         array (
             'GuzzleHttp\\Psr7\\' => 16,
         ),
-        'C' => 
+        'E' => 
         array (
-            'Conexao\\' => 8,
+            'Evenement\\' => 10,
         ),
         'A' => 
         array (
@@ -108,16 +108,16 @@ class ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'Conexao\\' => 
+        'Evenement\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Conexao',
+            0 => __DIR__ . '/..' . '/evenement/evenement/src',
         ),
         'Api\\Websocket\\' => 
         array (
@@ -125,19 +125,19 @@ class ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed
         ),
     );
 
-    public static $prefixesPsr0 = array (
-        'E' => 
-        array (
-            'Evenement' => 
-            array (
-                0 => __DIR__ . '/..' . '/evenement/evenement/src',
-            ),
-        ),
-    );
-
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
+        'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
+        'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
+        'DateInvalidTimeZoneException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidTimeZoneException.php',
+        'DateMalformedIntervalStringException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateMalformedIntervalStringException.php',
+        'DateMalformedPeriodStringException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateMalformedPeriodStringException.php',
+        'DateMalformedStringException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateMalformedStringException.php',
+        'DateObjectError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateObjectError.php',
+        'DateRangeError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateRangeError.php',
+        'Override' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/Override.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
@@ -147,10 +147,9 @@ class ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitcc94ce3b55e277b4d24e92f36a3816ed::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit70fd346c1df44bbb471697a01a42b813::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit70fd346c1df44bbb471697a01a42b813::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit70fd346c1df44bbb471697a01a42b813::$classMap;
 
         }, null, ClassLoader::class);
     }

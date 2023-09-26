@@ -1,7 +1,7 @@
 <?php 
 
 
-// Definindo os tipos come restritos
+// Definindo os tipos como restritos
 declare(strict_types = 1);
 
 namespace Api\Websocket;
@@ -9,7 +9,7 @@ use Exception;
 use Api\Websocket\Conexao\Conn;
 
 $url = 'vendor/autoload.php';
-// VErificador de URL simples
+// Verificador de URL simples
 if (file_exists($url)) {
     // Verificando se estou usando o caminho Web socket para ser chamado no servidor
     // ou se um objeto js esta enviando seus dados para esse Crud
@@ -25,21 +25,6 @@ class Estrutura {
     protected $conn;
 
     public function __construct(){
-        foreach($_REQUEST as $chave => $value){
-            $this->dados[$chave] = $value;
-        }
-        // Verificando se todos os valores enviados estão prenchidos
-        /*
-        foreach($this->dados as $chave => $value){
-            if(is_null($value) || empty($value)){
-                $dados = array(
-                    "type" => 'error',
-                    "mensagem" => 'O campo $chave é obrigatório(s), e não preenchido(s).'
-                );
-                throw new Exception("Faltou vc prencher os dados associados a/ao {$chave}");
-            } 
-        }
-        echo json_encode($dados)*/
         $this->conn = new Conn();
     }
 
@@ -54,48 +39,35 @@ class Estrutura {
                 "type" => 'error',
                 "mensagem" => 'Erro na conexao do banco ou acesso a tabela'
             );
-            echo json_encode($dados);
-            throw new Exception("Erro ao buscar tabela  \n", 404);
+            json_encode($dados);
+            throw new Exception(implode(",",$dados), 404);
         } else {
-            //print_r($stmt->fetch());
+
             $colunsbanco = array_keys($stmt->fetch());
             // Arrancando o a chave primaria das colunas do banco para fazer a comparação
             array_pop($colunsbanco);
             //Usaremos o array_shift
             //var_dump($colunsbanco);
             array_pop($this->dados);
-            /*
-            // Vou criar uma fução para poupar linhas
-            foreach($this->dados as $chave => $value){
-                if(is_null($value) || empty($value)){
-                    throw new Exception("Faltou vc prencher os dados associados a/ao {$chave}");
-                    
-                } 
-            }*/
             $colunsComp = array_keys($this->dados);
             $colunas = implode("," , array_keys($this->dados)); 
             $valores = "'".implode("','" ,array_values($this->dados))."'";
-            //print_r(array_diff($colunsbanco, $colunsComp));
+
             if($array = array_diff($colunsbanco, $colunsComp)){
                 //var_dump($array);
                 $erro = implode("," , $array);
                 // Erro se a pessoa tentar enviar dados não compativeis com a tabela acessada
+                $msg =  "Parece que a coluna {$erro} não foi prenchida ou não consta no nosso banco de dados";
                 $dados = array(
                     "type" => 'error',
-                    "mensagem" => "Dado {$erro} não consta na tabela de envio"
+                    "mensagem" => $msg
                 );
-                echo json_encode($dados);
-                throw new Exception("Parece que a coluna {$erro} não foi prenchida ou não consta no nosso banco de dados \n", 31);
+                json_encode($dados);
+                throw new Exception(implode(",",$dados), 404);
             } else {
                 // Verificando se é a tabela com chaves primarias e vendo se o valor e igual ao do banco
-                if($this->Chave_Estrangeira() == false){
-                    $dados = array(
-                        "type" => 'error',
-                        "mensagem" => 'Chave Estrangeira não existe'
-                    );
-                    echo json_encode($dados);
-                    throw new Exception("Erro, Chave primaria Falha \n", 128);
-                }
+                $this->Chave_Estrangeira();
+
                 for($i = 1; $i <= count(array_keys($this->dados)); $i++){
                     $count[] = "?" ;
                 }
@@ -103,24 +75,23 @@ class Estrutura {
                 $sql = "INSERT INTO {$tabela} ({$colunas}) VALUES ($atributos)";
                 $stmt = $this->conn->Conn()->prepare($sql);
                 if($stmt->execute(array_values($this->dados))){
-                    //echo "funcionou \n";
-                    //echo $sql;
                     $dados = array(
                         'type' => 'success',
                         'mensagem' => 'Registro salvo com sucesso!'
                     );
+                    echo json_encode($dados);
                 } else {
                     $dados = array(
                         "type" => 'error',
                         "mensagem" => 'Erro ao conectar a(ao) banco'
                     );
-                    echo json_encode($dados);
-                    throw new Exception("Erro ao executar inserção ao banco", 41);
+                    json_encode($dados);
+                    throw new Exception(implode(",",$dados), 41);
                 }
                 //$this->conn->Close();
                 //echo json_encode($colunas)."\n\n";
                 //echo json_encode($valores)."\n\n";
-                echo json_encode($dados);
+                //echo json_encode($dados);
             }
         }
         
@@ -139,8 +110,8 @@ class Estrutura {
                 "type" => 'error',
                 "mensagem" => 'Erro na conexao do banco ou acesso a tabela'
             );
-            echo json_encode($dados);
-            throw new Exception("Erro ao buscar tabela \n", 99);
+            json_encode($dados);
+            throw new Exception(implode(",",$dados), 99);
         } else {
             // Pegando as colunas do banco para verificar se todos os dados foram entregues
             $dadosbanco = $stmt->fetch();
@@ -164,22 +135,18 @@ class Estrutura {
             if($array = array_diff($colunsbanco, $colunsComp)){
                 var_dump($array);
                 $erro = implode("," , $array);
+                $msg = "Dado {$erro} não consta na tabela de envio";
                 $dados = array(
                     "type" => 'error',
-                    "mensagem" => "Dado {$erro} não consta na tabela de envio"
+                    "mensagem" => $msg
                 );
                 // Erro se a pessoa tentar enviar dados não compativeis com a tabela acessada
-                throw new Exception("Parece que a coluna {$erro} não foi prenchida ou não consta no nosso banco de dados \n", 123);
+                json_encode($dados);
+                throw new Exception(implode(",",$dados), 123);
             } else {
                 // Verificando se é a tabela com chaves primarias e vendo se o valor e igual ao do banco
-                if($this->Chave_Estrangeira() == false){
-                    $dados = array(
-                        "type" => 'error',
-                        "mensagem" => 'Chave Estrangeira não existe'
-                    );
-                    echo json_encode($dados);
-                    throw new Exception("Erro, Chave primaria Falha \n", 128);
-                }
+                $this->Chave_Estrangeira();
+
                 $colunas = array_keys($this->dados);
                 foreach($colunas as $chave => $value){
                     $colunas[$chave] .= " = ?";
@@ -195,106 +162,28 @@ class Estrutura {
                 $sql = "UPDATE {$tabela} SET {$campos} WHERE {$ultimoChave}";
                 // Preparando os objetos
                 $stmt = $this->conn->Conn()->prepare($sql);
-                // Verificação de dados
-                //print_r(array_values($this->dados));
-                //print_r($campos);
-                //echo $sql;
-                //print_r(array_values($this->dados));
+
                 if($stmt->execute(array_values($this->dados))){
                     //echo "\n funcionou \n";
                     $dados = array(
                         'type' => 'success',
                         'mensagem' => 'Registro salvo com sucesso!'
                     );
+                    echo json_encode($dados);
                 } else {
                     $dados = array(
                         "type" => 'error',
                         "mensagem" => 'Erro ao conectar a(ao) banco'
                     );
-                    echo json_encode($dados);
-                    throw new Exception("Erro ao executar inserção ao banco \n", 41);
+                    json_encode($dados);
+                    throw new Exception(implode(",",$dados), 41);
                 }
                 //$this->conn->Close();
                 //echo json_encode($colunas)."\n\n";
                 //echo json_encode($valores)."\n\n";
-                echo json_encode($dados);
+                //echo json_encode($dados);
             }
         }
-    }
-
-    // Faltou arrumar esse Read --------------------------------------X (Tenho que ver o tipo de DataTables que utilizaremos)
-    protected function Read() : void{
-        $requestData = $_REQUEST;
-        //$requestData = filter_var_array($requestData, FILTER_SANITIZE_STRING);
-        $colunas = $requestData['columns']; //Obter as colunas vindas do resquest
-        //Preparar o comando sql para obter os dados da categoria
-        $sql = "SELECT * FROM equipamento WHERE 1=1";
-        //Obter o total de registros cadastrados
-        $resultado = $this->conn->Conn()->query($sql);
-        $qtdeLinhas = $resultado->rowCount();
-        //Verificando se há filtro determinado
-        $filtro = $requestData['search']['value'];
-        if(!empty($filtro)){
-            //Montar a expressão lógica que irá compor os filtros
-            //Aqui você deverá determinar quais colunas farão parte do filtro
-            $sql .= " AND (id LIKE '$filtro%' ";
-            $sql .= " OR nome LIKE '$filtro%') ";
-        }
-        //Obter o total dos dados filtrados
-        $resultado = $this->conn->Conn()->query($sql);
-        $totalFiltrados = $resultado->rowCount();
-        //Obter valores para ORDER BY      
-        $colunaOrdem = $requestData['order'][0]['column']; //Obtém a posição da coluna na ordenação
-        $ordem = $colunas[$colunaOrdem]['data']; //Obtém o nome da coluna para a ordenação
-        $direcao = $requestData['order'][0]['dir']; //Obtém a direção da ordenação
-        //Obter valores para o LIMIT
-        $inicio = $requestData['start']; //Obtém o ínicio do limite
-        $tamanho = $requestData['length']; //Obtém o tamanho do limite
-        //Realizar o ORDER BY com LIMIT
-        $sql .= " ORDER BY $ordem $direcao LIMIT $inicio, $tamanho ";
-        $resultado = $this->conn->Conn()->query($sql);
-        //echo $sql;
-        $resultData = array();
-        while($row = $resultado->fetch()){
-            $resultData[] = array_map('utf8_encode', $row);
-        }
-        //Monta o objeto json para retornar ao DataTable
-        $dados = array(
-            "draw" => intval($requestData['draw']),
-            "recordsTotal" => intval($qtdeLinhas),
-            "recordsFiltered" => intval($totalFiltrados),
-            "data" => $resultData
-        );
-        echo json_encode($dados);
-    }
-
-    public function View() {
-        $requestData = $_REQUEST;
-            // gerar a querie de insersao no banco de dados 
-            $sql = "SELECT * FROM equipamento WHERE ID = ".$requestData['ID']."";
-            // preparar a querie para gerar objetos de insersao no banco de dados
-            
-            $resultado = $this->conn->Conn()->query($sql);
-            if($resultado){
-            $result = array();
-            while($row = $resultado->fetch()){
-                $result = array_map('utf8_encode', $row);
-            }
-            $dados = array(
-                'type' => 'view',
-                'mensagem' => '',
-                'dados' => $result
-            );
-            }
-            else {
-                $dados = array(
-                    'type' => 'error',
-                        'mensagem' => 'Erro ao abrir o registro:'
-                    );  
-            }
-        return json_encode($dados);
-    
-    
     }
 
     protected function Delete(){
@@ -315,9 +204,10 @@ class Estrutura {
 
         }
     }
+
     // Função de verificação de chave Estrangeira
     public function Chave_Estrangeira(){
-        //$arrayAll = array("nome" => 'marco', "total_id_cargo" => '2', "id" => '2',"tabela" => "pessoa"); Valor teste
+        //$arrayAll = array("nome" => 'marco', "total_ch_cargo" => '2', "id" => '2',"tabela" => "pessoa"); Valor teste
         $padrao = '/[^a-zA-Z0-9\s]/';
         $arrayAll = $this->dados;
 
@@ -339,19 +229,28 @@ class Estrutura {
                     $ColEstrang = $NewArray[$indice];
                     // $arry[2] => pega a tabela da chave estrangeira /
                     $sql = "SELECT {$tabela}.* FROM {$tabela} INNER JOIN {$array[2]} ON {$valor} = {$array[2]}.{$ColEstrang}";
-                    //echo "{$sql}\n"; analisando a formato do codigo
+                    //echo "{$sql}\n";
                     $stmt = $this->conn->Conn()->prepare($sql);
                     if($stmt->execute()){
                         if($stmt->rowCount() > 0){
                             return $stmt->fetchAll();
-                            return True;
                         } else {
-                            throw new Exception("Desculpe mais o valor {$valor} do {$ColEstrang} da Tabela {$tabela} não existe", 139);
-                            return False;
-                            
+                            $msg = "Desculpe mais o valor {$valor} do {$ColEstrang} da Tabela {$tabela} não existe";
+                            $dados = array(
+                                "type" => 'error',
+                                "mensagem" => $msg
+                            );
+                            json_encode($dados);
+                            throw new Exception(implode(",",$dados), 41);
                         }
                     } else {
-                        throw new Exception("Erro ao procurar chave estrangeira da tabela {$tabela}", 145);
+                        $msg = "Erro ao procurar chave estrangeira da tabela {$tabela}";
+                        $dados = array(
+                            "type" => 'error',
+                            "mensagem" => $msg
+                        );
+                        json_encode($dados);
+                        throw new Exception(implode(",",$dados), 41);
                         
                     }
                 } elseif(!in_array("CH", $array)) {
@@ -380,70 +279,22 @@ class Estrutura {
         $this->SetDados($dados);
         echo $this->Insert();
     }
-    public function CallRead(){
-        // Datatables
-        echo $this->Read();
-    }
-    public function CallView(){
-        // Datatables
-        echo $this->View();
-    }
 
     // Chadamas de Funções de Set valores (Estou usando isso por causa da forma de envio de dados do Chat)
 
     public function SetDados(Array $dados){
         // Verificando se todos os valores enviados estão prenchidos
-        //print_r($teste);
-        //var_dump($dados);
         foreach($dados as $chave => $value){
             if(is_null($value) || empty($value)){
-                throw new Exception("Faltou vc prencher os dados associados a/ao {$chave} \n\n");
-                
+                $dados = array(
+                    "type" => 'error',
+                    "mensagem" => "Faltou vc prencher os dados associados a/ao {$chave}"
+                );
+                // Erro se a pessoa tentar enviar dados não compativeis com a tabela acessada
+                json_encode($dados);
+                throw new Exception(implode(",",$dados), 123);
             } 
-        }
-        
+        }        
         $this->dados = $dados;
     }
 }
-
-$requestData = $_REQUEST;
-// Operando com o datatables (Fase Teste)
-try {
-    $teste = new Estrutura();
-    if($requestData['operacao'] == 'read') {
-        $teste->CallRead();
-    };
-    if($requestData['operacao'] == 'create') {
-        $dados = $requestData;
-        $dados = $teste->Remove($dados, $requestData['operacao']);
-        $dados = $teste->Remove($dados, $requestData['id']);
-        echo $teste->CallInsert($dados);
-        
-    };
-    if($requestData['operacao'] == 'update') {
-        $dados = $requestData;
-        $dados = $teste->Remove($dados, $requestData['operacao']);
-        $teste->CallUpdate($requestData);
-    };
-    if($requestData['operacao'] == 'delete') {
-    
-    
-    };
-    if($requestData['operacao'] == 'view') {
-        $teste->CallView();
-    };
-
-} catch (Exception $e) {
-    
-    echo "Mensagem: ".$e->getMessage()."\n";
-    echo "Codigo: ".$e->getCode()."\n";
-    echo "Linha: ".$e->getLine()."\n";
-    echo "Arquivo: ".$e->getFile()."\n";
-}
-
-/*
-$array = array( "aolo1" =>1,"aolo2" =>2,"aolo3" =>"alo");
-
-$number = count(array_keys($array));
-
-echo $number;*/

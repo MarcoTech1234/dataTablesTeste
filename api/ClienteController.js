@@ -34,7 +34,7 @@ $(document).ready(function(){
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "api/src/Estrutura.php?operacao=read",
+            "url": "api/src/Datatables.php?operacao=read",
             "type": "POST"
         },
         "language": {
@@ -91,7 +91,7 @@ $('.btn-save').click(function(e){
     dados += `&tabela= equipamento`
     dados += `&operacao=${$('.btn-save').attr('data-operation')}` 
     
-    let url = 'api/src/Estrutura.php'
+    let url = 'api/src/Datatables.php'
     console.log(dados);
     CRUD(dados, url)
 
@@ -104,7 +104,7 @@ $('#table-cliente').on('click', 'button.btn-view', function(e){
     $('.modal-title').empty()
     $('.modal-title').append('Visualização de registros')
     let dados = `ID=${$(this).attr('id')}&operacao=view`
-    let url = 'api/src/Estrutura.php'
+    let url = 'api/src/Datatables.php'
 
     CRUD(dados, url)
     $('.btn-save').hide()
@@ -118,7 +118,7 @@ $('#table-cliente').on('click', 'button.btn-edit', function(e){
     $('.modal-title').empty()
     $('.modal-title').append('Edição de registros')
     let dados = `ID=${$(this).attr('id')}&operacao=view`
-    let url = 'api/src/Estrutura.php'
+    let url = 'api/src/Datatables.php'
 
     CRUD(dados, url)
     $('.btn-save').attr('data-operation', 'update')
@@ -141,7 +141,7 @@ $('#table-cliente').on('click', 'button.btn-delete', function(e){
     }) .then((result => {
         if(result.isConfirmed){
             let dados = `ID=${$(this).attr('id')}&operacao=delete`
-    let url = 'api/src/Estrutura.php'
+    let url = 'api/src/Datatables.php'
 
     CRUD(dados, url)
     $('#table-cliente').DataTable().ajax.reload()
