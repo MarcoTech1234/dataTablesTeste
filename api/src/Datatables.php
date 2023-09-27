@@ -24,8 +24,9 @@ class Datatables {
         $requestData = $_REQUEST;
         //$requestData = filter_var_array($requestData, FILTER_SANITIZE_STRING);
         $colunas = $requestData['columns']; //Obter as colunas vindas do resquest
+        $tabela = $requestData['tabela'];
         //Preparar o comando sql para obter os dados da categoria
-        $sql = "SELECT * FROM equipamento WHERE 1=1";
+        $sql = "SELECT * FROM {$tabela} WHERE 1=1";
         //Obter o total de registros cadastrados
         $resultado = $this->conn->Conn()->query($sql);
         $qtdeLinhas = $resultado->rowCount();
@@ -35,8 +36,18 @@ class Datatables {
             //Montar a expressão lógica que irá compor os filtros
             //Aqui você deverá determinar quais colunas farão parte do filtro
             $sql .= " AND (id LIKE '$filtro%' ";
-            $sql .= " OR nome LIKE '$filtro%') ";
+            $filtros = $requestData['filtro'];
+            $filtroArray  = explode('_' ,$filtros);
+            //print_r($filtroArray);
+            for($cont = 0; $cont < count($filtroArray); $cont++){
+                $pesq = $filtroArray[$cont];
+                if($pesq !== 'id' ){
+                    $sql .= " OR {$pesq} LIKE '$filtro%' ";
+                }
+            }
+            $sql .= ")";
         }
+        //echo $sql;
         //Obter o total dos dados filtrados
         $resultado = $this->conn->Conn()->query($sql);
         $totalFiltrados = $resultado->rowCount();

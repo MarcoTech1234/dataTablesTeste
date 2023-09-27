@@ -34,7 +34,7 @@ $(document).ready(function(){
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "api/src/Datatables.php?operacao=read",
+            "url": "api/src/Datatables.php?operacao=read&tabela=equipamento&filtro=nome_id_status",
             "type": "POST"
         },
         "language": {
