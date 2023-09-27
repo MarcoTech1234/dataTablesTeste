@@ -144,14 +144,28 @@ try {
     if($requestData['operacao'] == 'view') {
         $data->CallView();
     };
+    if($requestData['operacao'] == 'verificar'){
+        $dados = $requestData;
+        $dados = $Crud->Remove($dados, $requestData['operacao']);
+        $dados['tabela'] = "chamada";
+        //echo $Crud->CallVerificar($dados);
+        if($Crud->CallVerificar($dados)){
+            $dados = array(
+                "type" => 'success',
+                "mensagem" => 'mensagem enviada com sucesso'
+            );
+            echo json_encode($dados);
+        }
+    }
 
 } catch (Exception $e) {
-    $dados = array("type" => "", "mensagem" => "");
+    $dados = array("type" , "mensagem");
     $del = explode(",",$e->getMessage());
-    $dados = array_map(function($e){
-        return $e;
-    }, $del);
-    print_r($dados);
+    $data = array();
+    for($i = 0; $i <= count($dados)-1; $i++){
+        $data += [$dados[$i] => $del[$i]];
+    }
+    echo json_encode($data, true);
     //echo json_encode(explode(",",$e->getMessage()));
     //echo "Codigo: ".$e->getCode()."\n";
     //echo "Linha: ".$e->getLine()."\n";

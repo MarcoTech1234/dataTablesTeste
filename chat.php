@@ -13,6 +13,7 @@ ob_start(); // Limpar o buffer de saida para evitar erro de redirecionamento
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Celke - WebSocket</title>
     <link rel="stylesheet" href="api/css/custom.css">
+    <link href="//cdn.jsdelivr.net/npm/@sweetalert2/dist/sweetalert2.all.css" rel="stylesheet">
 </head>
 
 <body>
@@ -38,6 +39,9 @@ ob_start(); // Limpar o buffer de saida para evitar erro de redirecionamento
             </form>
         </div>
     </div>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="api/js/custom.js"></script>
 
 </body>

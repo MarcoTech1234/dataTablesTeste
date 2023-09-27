@@ -50,25 +50,51 @@ const enviar = () => {
     // Criar o array de dados para enviar para websocket
     let dados = {
         mensagem: `${mensagem.value}`,
-        Computador: `${Pc.value}`,
+        id_CH_equipamento: `${Pc.value}`,
         Status: `${Status.value}`
     }
 
-    // Enviar a mensagem para websocket
-    ws.send(JSON.stringify(dados));
-
-    // Enviar a mensagem para o HTML, inserir no final da lista de mensagens
-    mensagemChat.insertAdjacentHTML('beforeend', `<div class="msg-enviada">
-            <div class="det-msg-enviada">
+    $.ajax({
+        dataType: 'JSON',
+        type: 'POST',
+        assync: true,
+        url: 'api/src/Datatables.php?operacao=verificar',
+        data: dados,
+        success: function(dados){
+            console.log(dados)
+            if(dados.type == "success"){
+                // Enviar a mensagem para websocket
+                ws.send(JSON.stringify(dados));
+                
+                // Enviar a mensagem para o HTML, inserir no final da lista de mensagens
+                mensagemChat.insertAdjacentHTML('beforeend', `<div class="msg-enviada">
+                <div class="det-msg-enviada">
                 <p class="texto-msg-enviada">${nomeUsuario}: ${mensagem.value}</p>
-            </div>
-        </div>`);
+                </div>
+                </div>`);
+                
+                // Limpar o campo mensagem
+                mensagem.value = '';
+                Pc.value = '';
+                Status.value = '';
+                
+                // Role para o final após adicionar as mensagens
+                scrollBottom();
+            }
+            else {
+                console.log("codigo legal meu parça");
+                console.log(dados)
+                if(dados.type == 'error'){
 
-    // Limpar o campo mensagem
-    mensagem.value = '';
-
-    // Role para o final após adicionar as mensagens
-    scrollBottom();
+                    Swal.fire ({
+                        icon: dados.type,
+                        title: 'SysPed',
+                        text: dados.mensagem
+                    })
+                }
+            }
+        }
+    })
 }
 
 // Role para o final após adicionar as mensagens

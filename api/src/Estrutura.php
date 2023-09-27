@@ -279,6 +279,10 @@ class Estrutura {
         $this->SetDados($dados);
         echo $this->Insert();
     }
+    public function CallVerificar(Array $dados) {
+        $this->SetDados($dados);
+        return $this->Chave_Estrangeira();
+    }
 
     // Chadamas de Funções de Set valores (Estou usando isso por causa da forma de envio de dados do Chat)
 
@@ -296,5 +300,6 @@ class Estrutura {
             } 
         }        
         $this->dados = $dados;
+        $this->tabela = $this->dados["tabela"];
     }
 }
