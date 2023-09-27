@@ -31,7 +31,6 @@ class SistemaChat implements MessageComponentInterface
     {
         // Adicionar o cliente na lista
         $this->cliente->attach($conn);
-
         echo "Nova conexão: {$conn->resourceId}. \n\n";
     }
 
@@ -40,34 +39,16 @@ class SistemaChat implements MessageComponentInterface
     {
         //
         $mgsT = json_decode($msg);
-        
-        // Com isso aq eu posso usar qualquer função do nosso crud atraves de mensagens do chat
-        $dados = array("mensagem" => $mgsT->mensagem, "id_CH_equipamento" => $mgsT->Computador, "date" => $this->date, "tabela" => $this->tabela);
-
-        try{
-            // Funções da Chamada
-            $this->save->CallInsert($dados);
-            $dados = array("status" => $mgsT->Status,"id" => $mgsT->Computador, "tabela" => "equipamento");
-            $this->save->CallUpdate($dados);
-
-        } catch (Exception $e) {
-
-            // Mostrando Erros de Chamada
-            echo "Mensagem: ".$e->getMessage()."\n";
-            echo "Codigo: ".$e->getCode()."\n";
-            echo "Linha: ".$e->getLine()."\n";
-            echo "Arquivo: ".$e->getFile()."\n";
-        }
+        $this->Salvar($mgsT);
         // Percorrer a lista de usuários conectados
         foreach($this->cliente as $cliente) {
-
             // Não enviar a mensagem para o usuário que enviou a mensagem
             if($from !== $cliente) {
                 // Enviar as mensagems para os usuários
                 $cliente->send($msg);
             }
         }
-        
+
         echo "Usuário {$from->resourceId} enviou uma mensagem. \n\n";
     }
 
@@ -87,5 +68,25 @@ class SistemaChat implements MessageComponentInterface
         $conn->close();
 
         echo "Ocorreu um erro: {$e->getMessage()} \n\n";
+    }
+
+    public function Salvar($mgsT){
+                // Com isso aq eu posso usar qualquer função do nosso crud atraves de mensagens do chat
+        $dados = array("mensagem" => $mgsT->mensagem, "id_CH_equipamento" => $mgsT->Computador, "date" => $this->date, "tabela" => $this->tabela);
+
+        try{
+            // Funções da Chamada
+            $this->save->CallInsert($dados);
+            $dados = array("status" => $mgsT->Status,"id" => $mgsT->Computador, "tabela" => "equipamento");
+            $this->save->CallUpdate($dados);
+
+        } catch (Exception $e) {
+
+            // Mostrando Erros de Chamada
+            echo "Mensagem: ".$e->getMessage()."\n";
+            echo "Codigo: ".$e->getCode()."\n";
+            echo "Linha: ".$e->getLine()."\n";
+            echo "Arquivo: ".$e->getFile()."\n";
+        }
     }
 }

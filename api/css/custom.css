@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+:root {
+    --bg-color: #f7f7f7;
+    --first-color: #fff;
+    --second-color: #ccc;
+    --third-color: #58b666;
+    --primary-color: #6fbced;
+    --primary-color-second: #e6e6e6;
+
+    --danger-color: #842029;
+    --danger-color-second: #f8d7da;
+    --danger-color-third: #f5c2c7;
+
+    --success-color: #0f5132;
+    --success-color-second: #d1e7dd;
+    --success-color-third: #badbcc;
+}
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    padding: 0 10px;
+}
+
+/* Inicio Login */
+.container {
+    background-color: var(--first-color);
+    width: 450px;
+    max-width: 450px;
+    border-radius: 16px;
+    box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0, 0.1),
+        0 32px 64px -48px rgba(0, 0, 0, 0, 0.5);
+}
+
+.conteudo {
+    padding: 25px 30px;
+}
+
+.header {
+    font-size: 25px;
+    font-weight: 500;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--primary-color-second);
+    color: var(--primary-color);
+}
+
+form {
+    margin: 20px 0;
+}
+
+.campo {
+    display: flex;
+    margin-bottom: 10px;
+    flex-direction: column;
+    position: relative;
+}
+
+label {
+    margin-bottom: 4px;
+    margin-top: 10px;
+}
+
+input {
+    height: 40px;
+    width: 390px;
+    font-size: 16px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid var(--second-color);
+}
+
+.btn-acessar {
+    border: none;
+    color: var(--first-color);
+    font-size: 17px;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+    margin-top: 13px;
+}
+
+/* Fim Login */
+
+/* Inicio chat */
+
+.conteudo-chat{
+    padding: 25px 0px;
+}
+.header-chat{
+    width: 450px;
+    display: flex;
+    align-items: center;
+    padding: 18px 10px;
+    color: var(--primary-color);
+    justify-content: space-between;
+}
+
+.usuario-dados{
+    display: flex;
+}
+
+.img-usuario{
+    height: 45px;
+    width: 45px;
+    margin: 0 15px;
+    border-radius: 50px;
+}
+
+.nome-usuario{
+    font-size: 17px;
+    font-weight: 500;
+    padding-top: 15px;
+}
+
+.btn-sair{
+    color: var(--first-color);
+    border: none;
+    outline: none;
+    background: var(--primary-color);
+    font-size: 17px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 7px;
+}
+
+.chat-box{
+    position: relative;
+    overflow-y: scroll;
+    height: 370px;
+    max-height: 370px;
+    padding: 10px 0 0 10px;
+    background: var(--bg-color);
+    box-shadow: inset 0 32px 32px -32px rgb(0 0 0 / 5%),
+        inset 0 -32px 32px -32px rgb(0 0 0 / 5%);
+}
+
+.msg-enviada{
+    margin: 15px 14px 15px 0;
+    display: flex;
+}
+
+.det-msg-enviada{
+    margin-left: auto;
+    max-width: calc(100% - 130px);
+}
+
+.texto-msg-enviada{
+    background: var(--primary-color);
+    color: var(--first-color);
+    border-radius: 18px 18px 0 18px;
+    word-wrap: break-word;
+    padding: 8px 16px;
+    box-shadow: 0 0 32px rgb(0, 0, 0 / 8%),
+            0rem 16px 16px -16px rgb(0 0 0 / 10%);
+}
+
+.msg-recebida{
+    margin: 15px 0;
+    display: flex;
+    align-items: flex-end;
+}
+
+.det-msg-recebida{
+    margin-right: auto;
+    margin-left: 10px;
+    max-width: calc(100% - 130px);
+}
+
+.texto-msg-recebida{
+    background: var(--third-color);
+    color: var(--first-color);
+    border-radius: 18px 18px 18px 0;
+    word-wrap: break-word;
+    padding: 8px 16px;
+    box-shadow: 0 0 32px rgb(0, 0, 0 / 8%),
+            0rem 16px 16px -16px rgb(0 0 0 / 10%);
+}
+
+.enviar-msg{
+    padding: 18px 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.campo-msg{
+    height: 40px;
+    width: calc(100% - 58px);
+    font-size: 16px;
+    padding: 0 13px;
+    border: 1px solid var(--primary-color-second);
+    outline: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.btn-enviar-msg{
+    color: var(--first-color);
+    width: 75px;
+    border: none;
+    outline: none;
+    background: var(--primary-color);
+    font-size: 17px;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+}
+
+/* Fim chat */
+
+/* Inicio alerta */
+.alert-erro {
+    background-color: var(--danger-color-second);
+    color: var(--danger-color);
+    margin: 10px 0;
+    border: 1px solid var(--danger-color-third);
+    border-radius: 5px;
+    padding: 7px;
+}
+
+.alert-sucesso {
+    background-color: var(--success-color-second);
+    color: var(--success-color);
+    margin: 10px 0;
+    border: 1px solid var(--success-color-third);
+    border-radius: 5px;
+    padding: 7px;
+}
