@@ -23,7 +23,7 @@ ob_start(); // Limpar o buffer de saida para evitar erro de redirecionamento
                 <div class="usuario-dados">
                         <h2>Chat</h2>
                         <!-- Imprimir o nome do usuário que está na sessão -->
-                        <p>Bem-vindo: <span id="nome-usuario" class="nome-usuario"></span><?php echo $_SESSION['usuario']; ?></span></p>
+                        <p>Bem-vindo: <span id="nome-usuario" class="nome-usuario"><?php echo $_SESSION['usuario']; ?></span></p>
                 </div>
             </div>
             <div class="chat-box" id="chatBox">

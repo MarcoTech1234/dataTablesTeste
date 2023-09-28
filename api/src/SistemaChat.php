@@ -38,7 +38,7 @@ class SistemaChat implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         //
-        $mgsT = json_decode($msg);
+        $mgsT = json_decode($msg, true);
         $this->Salvar($mgsT);
         // Percorrer a lista de usuários conectados
         foreach($this->cliente as $cliente) {
@@ -72,12 +72,12 @@ class SistemaChat implements MessageComponentInterface
 
     public function Salvar($mgsT){
                 // Com isso aq eu posso usar qualquer função do nosso crud atraves de mensagens do chat
-        $dados = array("mensagem" => $mgsT->mensagem, "id_CH_equipamento" => $mgsT->id_CH_equipamento, "date" => $this->date, "tabela" => $this->tabela);
+        $dados = array("mensagem" => $mgsT['mensagem'], "id_CH_equipamento" => $mgsT['id_CH_equipamento'], "date" => $this->date, "tabela" => $this->tabela);
 
         try{
             // Funções da Chamada
             $this->save->CallInsert($dados);
-            $dados = array("status" => $mgsT->Status,"id" => $mgsT->id_CH_equipamento, "tabela" => "equipamento");
+            $dados = array("status" => $mgsT['Status'],"id" => $mgsT['id_CH_equipamento'], "tabela" => "equipamento");
             $this->save->CallUpdate($dados);
 
         } catch (Exception $e) {

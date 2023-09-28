@@ -60,9 +60,9 @@ const enviar = () => {
         assync: true,
         url: 'api/src/Datatables.php?operacao=verificar',
         data: dados,
-        success: function(dados){
+        success: function(dadosR){
             console.log(dados)
-            if(dados.type == "success"){
+            if(dadosR.type == "success"){
                 // Enviar a mensagem para websocket
                 ws.send(JSON.stringify(dados));
                 
@@ -84,12 +84,12 @@ const enviar = () => {
             else {
                 console.log("codigo legal meu parça");
                 console.log(dados)
-                if(dados.type == 'error'){
+                if(dadosR.type == 'error'){
 
                     Swal.fire ({
-                        icon: dados.type,
+                        icon: dadosR.type,
                         title: 'SysPed',
-                        text: dados.mensagem
+                        text: dadosR.mensagem
                     })
                 }
             }
